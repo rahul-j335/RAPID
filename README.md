@@ -1,32 +1,51 @@
-# React + TypeScript + Vite
+# RAPID - Next-Gen Coastal Flood & Surge Forecasting
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> Intelligent real-time coastal flood forecasting, telemetry simulation, and emergency response management.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🌊 Overview
+**RAPID** is a cutting-edge web platform engineered for real-time coastal monitoring, high-risk surge probability estimation, and emergency scenario planning. Built with modern web technologies, it provides interactive geographical mapping, sensor trend visualization, and instantaneous alerts.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⚡ Tech Stack
+- **Framework:** React 19 + TypeScript
+- **Bundler:** Vite
+- **Styling:** Modular CSS & Glassmorphism design tokens
+- **Visuals & Charts:** Canvas-based interactive sparklines & gauge components
+- **Deployment:** Cloudflare Pages / Static Hosting
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 🚀 Getting Started
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### Prerequisites
+- Node.js (v18.0 or newer)
+- npm or pnpm
+
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/rahul-j335/RAPID.git
+
+# Navigate to project directory
+cd RAPID
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### Production Build
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## 🤝 Contributing
+Contributions are warmly welcomed! Please check [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and development workflow.
