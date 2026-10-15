@@ -44,184 +44,7 @@ function Section({ children, id, bg }: { children: React.ReactNode; id?: string;
   );
 }
 
-/* ── Topographic SVG map with premium animations ── */
-const TopoMap: React.FC = () => (
-  <div style={{
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    background: '#071512',
-    borderRadius: 'inherit',
-    overflow: 'hidden',
-  }}>
-    <svg
-      viewBox="0 0 440 280"
-      style={{ width: '100%', height: '100%', opacity: 0.95 }}
-      preserveAspectRatio="xMidYMid slice"
-    >
-      {/* Animated contour lines */}
-      {[0,1,2,3,4,5,6,7,8,9,10,11,12].map(i => (
-        <ellipse
-          key={i}
-          cx={220 + Math.sin(i * 0.7) * 12}
-          cy={140 + Math.cos(i * 0.5) * 8}
-          rx={30 + i * 18}
-          ry={18 + i * 11}
-          fill="none"
-          stroke={i % 5 === 0 ? '#1affe4' : '#0d8a78'}
-          strokeWidth={i % 5 === 0 ? 1.4 : 0.7}
-          strokeDasharray={i % 5 === 0 ? '6 3' : 'none'}
-          opacity={1 - i * 0.04}
-          transform={`rotate(${i * 8 - 20} 220 140)`}
-        >
-          {i % 5 === 0 && (
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from={`${i * 8 - 20} 220 140`}
-              to={`${i * 8 + 340} 220 140`}
-              dur={`${30 + i * 5}s`}
-              repeatCount="indefinite"
-            />
-          )}
-        </ellipse>
-      ))}
 
-      {/* River-like animated path */}
-      <path
-        d="M80,180 C110,160 140,170 170,155 C200,140 230,150 260,140 C290,130 320,145 350,135 C370,128 390,135 410,130"
-        fill="none" stroke="#00e5c4" strokeWidth="3" opacity="0.8" strokeLinecap="round"
-        strokeDasharray="8 4"
-      >
-        <animate attributeName="stroke-dashoffset" from="24" to="0" dur="2s" repeatCount="indefinite" />
-      </path>
-
-      {/* Secondary contours */}
-      {[0,1,2,3,4,5].map(i => (
-        <path
-          key={`c${i}`}
-          d={`M${50 + i*15},${60+i*8} C${100+i*20},${80+i*5} ${200+i*10},${90+i*7} ${300+i*15},${85+i*6} C${360+i*12},${82+i*5} ${400+i*8},${100+i*4} ${430},${110+i*3}`}
-          fill="none"
-          stroke={i % 2 === 0 ? '#0d8a78' : '#0a6659'}
-          strokeWidth={0.6}
-          opacity={0.7}
-        />
-      ))}
-
-      {/* Grid overlay */}
-      {[0,1,2,3,4,5,6].map(i => (
-        <line key={`h${i}`} x1="0" y1={i*47} x2="440" y2={i*47} stroke="#0d5047" strokeWidth="0.4" opacity="0.4" />
-      ))}
-      {[0,1,2,3,4,5,6,7,8,9].map(i => (
-        <line key={`v${i}`} x1={i*49} y1="0" x2={i*49} y2="280" stroke="#0d5047" strokeWidth="0.4" opacity="0.4" />
-      ))}
-
-      {/* Radar scanning sweep */}
-      <g transform="translate(220,140)">
-        <line x1="0" y1="0" x2="160" y2="0" stroke="#00e5c4" strokeWidth="1.5" opacity="0.6">
-          <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite" />
-        </line>
-        <polygon points="0,0 160,-30 160,0" fill="#00e5c4" opacity="0.08">
-          <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite" />
-        </polygon>
-      </g>
-
-      {/* Sensor Node Pings */}
-      {[
-        { x: 120, y: 100, label: 'S1' },
-        { x: 310, y: 90,  label: 'S2' },
-        { x: 160, y: 200, label: 'S3' },
-        { x: 350, y: 210, label: 'S4' },
-      ].map((node, idx) => (
-        <g key={node.label}>
-          <circle cx={node.x} cy={node.y} r="4" fill="#B7F34A" />
-          <circle cx={node.x} cy={node.y} r="10" fill="none" stroke="#B7F34A" strokeWidth="1" opacity="0.6">
-            <animate attributeName="r" values="4;16;4" dur={`${1.8 + idx * 0.4}s`} repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.8;0;0.8" dur={`${1.8 + idx * 0.4}s`} repeatCount="indefinite" />
-          </circle>
-          <text x={node.x + 7} y={node.y + 3} fill="#8B9298" fontSize="8" fontFamily="'Geist Mono', monospace">{node.label}</text>
-        </g>
-      ))}
-
-      {/* Center main pulse */}
-      <circle cx="220" cy="140" r="6" fill="#00e5c4" opacity="0.9" />
-      <circle cx="220" cy="140" r="14" fill="none" stroke="#00e5c4" strokeWidth="1.8" opacity="0.6">
-        <animate attributeName="r" values="8;28;8" dur="2s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite" />
-      </circle>
-    </svg>
-
-    {/* Zone label */}
-    <div style={{
-      position: 'absolute', top: 14, left: 16,
-      display: 'flex', alignItems: 'center', gap: 10,
-    }}>
-      <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#00e5c4', boxShadow: '0 0 8px #00e5c4', animation: 'pulseDot 1.5s ease infinite' }} />
-      <span style={{ fontSize: 11, color: '#00e5c4', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.08em' }}>
-        ZONE_H4 // COOPER RIVER
-      </span>
-      <span style={{ fontSize: 11, color: '#8B9298', fontFamily: "'Geist Mono', monospace", marginLeft: 8 }}>
-        ALT. 12m
-      </span>
-    </div>
-
-    {/* Rotating Crosshair */}
-    <div style={{ position: 'absolute', bottom: 18, right: 18, opacity: 0.85 }}>
-      <svg width="28" height="28" fill="none" viewBox="0 0 28 28" style={{ animation: 'spin 12s linear infinite' }}>
-        <circle cx="14" cy="14" r="10" stroke="#00e5c4" strokeWidth="1.2" strokeDasharray="4 2" />
-        <circle cx="14" cy="14" r="4"  stroke="#00e5c4" strokeWidth="1.2" />
-        <line x1="14" y1="2" x2="14" y2="8"   stroke="#00e5c4" strokeWidth="1.2" />
-        <line x1="14" y1="20" x2="14" y2="26" stroke="#00e5c4" strokeWidth="1.2" />
-        <line x1="2"  y1="14" x2="8"  y2="14" stroke="#00e5c4" strokeWidth="1.2" />
-        <line x1="20" y1="14" x2="26" y2="14" stroke="#00e5c4" strokeWidth="1.2" />
-      </svg>
-    </div>
-
-    {/* Simulated surge badge */}
-    <div style={{
-      position: 'absolute', bottom: 14, left: 14,
-      background: 'rgba(0,229,196,0.12)',
-      border: '1px solid rgba(0,229,196,0.35)',
-      borderRadius: 8, padding: '5px 12px',
-      display: 'flex', alignItems: 'center', gap: 8,
-      backdropFilter: 'blur(4px)',
-    }}>
-      <span style={{ fontSize: 11, color: '#8B9298', fontFamily: "'Geist', sans-serif" }}>SIMULATED SURGE</span>
-      <span style={{ fontSize: 14, fontWeight: 700, color: '#00e5c4', fontFamily: "'Geist Mono', monospace" }}>+2.45m</span>
-    </div>
-  </div>
-);
-
-/* ── Metric sidebar sparkline ── */
-const MiniSpark: React.FC<{ color: string }> = ({ color }) => {
-  const pts = [0,3,1,5,2,4,6,3,5,7].map((v, i, a) =>
-    `${(i / (a.length - 1)) * 60},${16 - (v / 7) * 14}`
-  ).join(' ');
-  return (
-    <svg width={60} height={16} style={{ overflow: 'visible' }}>
-      <polyline points={pts} fill="none" stroke={color} strokeWidth={1.4}
-        strokeLinejoin="round" strokeLinecap="round" opacity={0.8} />
-    </svg>
-  );
-};
-
-/* ── Surge donut ── */
-const SurgeDonut: React.FC<{ pct: number }> = ({ pct }) => {
-  const r = 22, c = 2 * Math.PI * r;
-  const fill = c * (1 - pct / 100);
-  return (
-    <svg width={60} height={60} viewBox="0 0 60 60">
-      <circle cx={30} cy={30} r={r} fill="none" stroke="#22252A" strokeWidth={5} />
-      <circle cx={30} cy={30} r={r} fill="none" stroke="#EF4444" strokeWidth={5}
-        strokeDasharray={`${c}`} strokeDashoffset={fill} strokeLinecap="round"
-        transform="rotate(-90 30 30)" />
-      <text x={30} y={34} textAnchor="middle"
-        style={{ fontSize: 13, fontWeight: 700, fill: '#F5F7F2', fontFamily: "'Geist Mono', monospace" }}>
-        {pct}%
-      </text>
-    </svg>
-  );
-};
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGetStarted, user, onDashboard }) => {
   const [scrolled, setScrolled]   = useState(false);
@@ -306,12 +129,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGetStarted,
           <div style={S.heroGrid} />
         </div>
 
-        <div style={{ ...S.heroInner, gridTemplateColumns: isMobile ? '1fr' : '1fr 1.1fr', gap: isMobile ? 32 : 48 }}>
-          {/* ── Left Copy ── */}
+        <div style={S.heroInner}>
           <div style={{
-            ...S.heroLeft,
+            ...S.heroContent,
             opacity: heroMounted ? 1 : 0,
-            transform: heroMounted ? 'translateX(0)' : 'translateX(-40px)',
+            transform: heroMounted ? 'translateY(0)' : 'translateY(24px)',
             transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1)',
           }}>
             {/* Badge */}
@@ -321,9 +143,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGetStarted,
             </div>
 
             <h1 style={S.heroH1}>
-              Predict the water.<br />
-              Protect what<br />
-              matters.
+              Predict the water. Protect what matters.
             </h1>
 
             <p style={S.heroCopy}>
@@ -349,73 +169,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGetStarted,
                 Active stream telemetry:{' '}
                 <strong style={{ color: '#F5F7F2' }}>2,400+ stations live</strong>
               </span>
-            </div>
-          </div>
-
-          {/* ── Right Visual ── */}
-          <div style={{
-            ...S.heroRight,
-            flexDirection: isMobile ? 'column' : 'row',
-            height: isMobile ? 'auto' : 320,
-            opacity: heroMounted ? 1 : 0,
-            transform: heroMounted ? 'translateX(0)' : 'translateX(40px)',
-            transition: 'all 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s',
-          }}>
-            {/* Topo map panel */}
-            <div style={S.topoWrap}>
-              <TopoMap />
-            </div>
-
-            {/* Right metric sidebar */}
-            <div style={S.metricSidebar}>
-              {/* Rainfall Intensity */}
-              <div style={S.metricCard}>
-                <div style={S.metricRow}>
-                  <span style={S.metricLabel}>RAINFALL INTENSITY</span>
-                  <span style={{ ...S.metricBadge, color: '#EF4444', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)' }}>PEAK</span>
-                </div>
-                <div style={S.metricVal}>
-                  <span style={{ fontSize: 28, fontWeight: 700, color: '#F5F7F2', fontFamily: "'Geist Mono', monospace" }}>18.4</span>
-                  <span style={{ fontSize: 12, color: '#8B9298', marginLeft: 4, fontFamily: "'Geist', sans-serif" }}>mm/hr</span>
-                </div>
-                <div style={S.metricTrend}>
-                  <span style={S.metricTrendLabel}>6hr Historical Trend</span>
-                  <MiniSpark color="#63D9FF" />
-                </div>
-              </div>
-
-              {/* Current Stage */}
-              <div style={S.metricCard}>
-                <div style={S.metricRow}>
-                  <span style={S.metricLabel}>CURRENT STAGE</span>
-                  <span style={{ ...S.metricBadge, color: '#63D9FF', background: 'rgba(99,217,255,0.12)', border: '1px solid rgba(99,217,255,0.25)' }}>HIGH</span>
-                </div>
-                <div style={S.metricVal}>
-                  <span style={{ fontSize: 28, fontWeight: 700, color: '#F5F7F2', fontFamily: "'Geist Mono', monospace" }}>1.84</span>
-                  <span style={{ fontSize: 12, color: '#8B9298', marginLeft: 4, fontFamily: "'Geist', sans-serif" }}>m</span>
-                </div>
-                <div style={S.metricTrend}>
-                  <span style={S.metricTrendLabel}>6hr Historical Trend</span>
-                  <MiniSpark color="#B7F34A" />
-                </div>
-              </div>
-
-              {/* Surge Probability */}
-              <div style={S.metricCard}>
-                <div style={S.metricRow}>
-                  <span style={S.metricLabel}>SURGE PROBABILITY</span>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#EF4444', boxShadow: '0 0 6px #EF4444', animation: 'pulseDot 1.5s ease infinite' }} />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 6 }}>
-                  <SurgeDonut pct={84} />
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#EF4444', fontFamily: "'Geist', sans-serif", marginBottom: 4 }}>High Risk</div>
-                    <div style={{ fontSize: 11, color: '#8B9298', fontFamily: "'Geist', sans-serif", lineHeight: 1.5 }}>
-                      Exceeds normal peak<br />levels in 2.4 hrs.
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -665,57 +418,34 @@ const S: Record<string, React.CSSProperties> = {
   requestBtn: { background: 'transparent', color: '#F5F7F2', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, padding: '8px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Geist', sans-serif", transition: 'all 0.2s' },
 
   // Hero
-  hero: { minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', overflow: 'hidden', paddingTop: 60 },
+  hero: { minHeight: '94vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden', paddingTop: 130, paddingBottom: 80 },
   heroBg: { position: 'absolute', inset: 0, zIndex: 0 },
-  glow: { position: 'absolute', borderRadius: '50%', filter: 'blur(120px)', pointerEvents: 'none' },
-  glowLime: { width: 500, height: 500, background: '#B7F34A', opacity: 0.05, top: '-15%', left: '0%' },
-  glowCyan: { width: 400, height: 400, background: '#00e5c4', opacity: 0.04, top: '10%', right: '5%' },
+  glow: { position: 'absolute', borderRadius: '50%', filter: 'blur(130px)', pointerEvents: 'none' },
+  glowLime: { width: 600, height: 600, background: '#B7F34A', opacity: 0.05, top: '-10%', left: '20%' },
+  glowCyan: { width: 500, height: 500, background: '#00e5c4', opacity: 0.05, top: '25%', right: '20%' },
   heroGrid: { position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px' },
 
   heroInner: {
-    maxWidth: 1200, margin: '0 auto', padding: '0 24px', width: '100%',
-    display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: 48, alignItems: 'center',
-    position: 'relative', zIndex: 1,
+    maxWidth: 1120, margin: '0 auto', padding: '0 24px', width: '100%',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+    position: 'relative', zIndex: 1, textAlign: 'center',
   },
-  heroLeft: { display: 'flex', flexDirection: 'column', gap: 24 },
+  heroContent: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28, maxWidth: 960, width: '100%' },
 
   // Badge
-  badge: { display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(183,243,74,0.08)', border: '1px solid rgba(183,243,74,0.2)', borderRadius: 100, padding: '6px 14px', fontSize: 11, color: '#B7F34A', fontFamily: "'Geist', sans-serif", fontWeight: 700, width: 'fit-content', letterSpacing: '0.05em' },
+  badge: { display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(183,243,74,0.08)', border: '1px solid rgba(183,243,74,0.2)', borderRadius: 100, padding: '7px 18px', fontSize: 12, color: '#B7F34A', fontFamily: "'Geist', sans-serif", fontWeight: 700, width: 'fit-content', letterSpacing: '0.06em', marginBottom: 2 },
   badgeDot: { width: 7, height: 7, borderRadius: '50%', background: '#B7F34A', boxShadow: '0 0 8px #B7F34A', animation: 'pulseDot 2s ease infinite', flexShrink: 0 },
 
   // Hero text
-  heroH1: { fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: 60, color: '#F5F7F2', lineHeight: 1.05, margin: 0, letterSpacing: '-0.03em' },
-  heroCopy: { fontSize: 16, color: '#8B9298', lineHeight: 1.7, margin: 0, fontFamily: "'Geist', sans-serif", maxWidth: 420 },
-  heroCtas: { display: 'flex', gap: 12, flexWrap: 'wrap' },
-  ctaPrimary: { background: '#B7F34A', color: '#0B0D0F', border: 'none', borderRadius: 8, padding: '12px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif", transition: 'opacity 0.2s, transform 0.15s' },
-  ctaOutline: { background: 'transparent', color: '#F5F7F2', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, padding: '12px 28px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: "'Geist', sans-serif", transition: 'border-color 0.2s' },
-  stationLine: { display: 'flex', alignItems: 'center', gap: 8 },
+  heroH1: { fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: 'clamp(42px, 5.8vw, 72px)', color: '#F5F7F2', lineHeight: 1.12, margin: 0, letterSpacing: '-0.03em', maxWidth: 940 },
+  heroCopy: { fontSize: 18, color: '#8B9298', lineHeight: 1.75, margin: 0, fontFamily: "'Geist', sans-serif", maxWidth: 740 },
+  heroCtas: { display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 },
+  ctaPrimary: { background: '#B7F34A', color: '#0B0D0F', border: 'none', borderRadius: 8, padding: '14px 34px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif", transition: 'opacity 0.2s, transform 0.15s', boxShadow: '0 4px 20px rgba(183,243,74,0.2)' },
+  ctaOutline: { background: 'transparent', color: '#F5F7F2', border: '1px solid rgba(255,255,255,0.18)', borderRadius: 8, padding: '14px 34px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: "'Geist', sans-serif", transition: 'border-color 0.2s, background 0.2s' },
+  stationLine: { display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, background: 'rgba(255,255,255,0.03)', padding: '7px 18px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.07)' },
   stationDot: { width: 7, height: 7, borderRadius: '50%', background: '#B7F34A', boxShadow: '0 0 6px #B7F34A', flexShrink: 0 },
 
-  // Hero right
-  heroRight: { display: 'flex', gap: 12, alignItems: 'stretch', height: 320 },
-  topoWrap: {
-    flex: 1, borderRadius: 12, overflow: 'hidden',
-    border: '1px solid rgba(0,229,196,0.2)',
-    boxShadow: '0 0 40px rgba(0,229,196,0.06)',
-  },
-  metricSidebar: { width: 160, display: 'flex', flexDirection: 'column', gap: 8 },
-  metricCard: {
-    background: '#10181A',
-    border: '1px solid #1C2828',
-    borderRadius: 10,
-    padding: '12px 14px',
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-  },
-  metricRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  metricLabel: { fontSize: 9, color: '#8B9298', fontFamily: "'Geist', sans-serif", fontWeight: 700, letterSpacing: '0.08em' },
-  metricBadge: { fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 10, fontFamily: "'Geist', sans-serif" },
-  metricVal: { display: 'flex', alignItems: 'baseline' },
-  metricTrend: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
-  metricTrendLabel: { fontSize: 9, color: '#8B9298', fontFamily: "'Geist', sans-serif" },
+
 
   // Partner strip
   partnerStrip: {
